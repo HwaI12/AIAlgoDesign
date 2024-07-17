@@ -25,5 +25,11 @@ body {
 
 #statistics {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+}
+
+#scatter-plot {
+    width: 100%;
+    height: 400px;
 }

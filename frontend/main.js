@@ -25,6 +25,7 @@ new Vue({
                 .then(data => {
                     this.properties = data;
                     this.plotProperties();
+                    this.createScatterPlot();
                 });
         },
         plotProperties() {
@@ -45,6 +46,21 @@ new Vue({
                 .then(data => {
                     this.predictionResult = data.predicted_score;
                 });
+        },
+        createScatterPlot() {
+            const trace = {
+                x: this.properties.map(p => p.m2),
+                y: this.properties.map(p => p.score),
+                mode: 'markers',
+                type: 'scatter',
+                marker: { size: 5 }
+            };
+            const layout = {
+                title: '面積とスコアの関係',
+                xaxis: { title: '面積 (m²)' },
+                yaxis: { title: 'スコア' }
+            };
+            Plotly.newPlot('scatter-plot', [trace], layout);
         }
     }
 });

@@ -10,12 +10,10 @@ CORS(app)
 data_processor = DataProcessor('SeoulRealEstate.csv')
 model = RealEstateModel(data_processor.X_scaled, data_processor.y)
 
-# ルートURLのハンドラを追加
 @app.route('/')
 def index():
     return send_from_directory('../frontend', 'index.html')
 
-# 静的ファイル（CSS, JS）を提供するためのルート
 @app.route('/<path:path>')
 def send_frontend(path):
     return send_from_directory('../frontend', path)
