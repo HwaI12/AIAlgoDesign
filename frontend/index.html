@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ソウル不動産価格予測システム</title>
+    <title>ソウル不動産評価スコア予測システム</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -12,13 +12,30 @@
 </head>
 <body>
     <div id="app">
-        <h1>ソウル不動産価格予測システム</h1>
+        <h1>ソウル不動産評価スコア予測システム</h1>
         <div id="map"></div>
         <div id="prediction-form">
-            <!-- 予測フォーム -->
+            <h2>評価スコア予測</h2>
+            <label>
+                面積 (m²):
+                <input type="number" v-model.number="predictionInput.m2">
+            </label>
+            <label>
+                階数:
+                <input type="number" v-model.number="predictionInput.p">
+            </label>
+            <label>
+                建築年 (YYYY):
+                <input type="number" v-model.number="predictionInput.buildDate">
+            </label>
+            <button @click="predict">予測</button>
+            <p v-if="predictionResult !== null">
+                予測評価スコア: {{ predictionResult.toFixed(2) }}
+            </p>
         </div>
         <div id="statistics">
-            <!-- 統計情報 -->
+            <h2>統計情報</h2>
+            <!-- ここに統計情報を表示 -->
         </div>
     </div>
     <script src="main.js"></script>

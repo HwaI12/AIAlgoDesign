@@ -6,7 +6,7 @@ new Vue({
         predictionInput: {
             m2: 0,
             p: 0,
-            buildDate: 0
+            buildDate: 2000
         },
         predictionResult: null
     },
@@ -20,7 +20,7 @@ new Vue({
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
         },
         fetchData() {
-            fetch('http://localhost:5000/data')
+            fetch('/data')
                 .then(response => response.json())
                 .then(data => {
                     this.properties = data;
@@ -30,11 +30,11 @@ new Vue({
         plotProperties() {
             this.properties.forEach(property => {
                 L.marker([property.lat, property.lng]).addTo(this.map)
-                    .bindPopup(`面積: ${property.m2}m², 階数: ${property.p}`);
+                    .bindPopup(`面積: ${property.m2}m², 階数: ${property.p}, スコア: ${property.score}`);
             });
         },
         predict() {
-            fetch('http://localhost:5000/predict', {
+            fetch('/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ new Vue({
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.predictionResult = data.predicted_price;
+                    this.predictionResult = data.predicted_score;
                 });
         }
     }

@@ -14,6 +14,15 @@ body {
     margin-bottom: 20px;
 }
 
+#prediction-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#prediction-form input {
+    width: 100px;
+}
+
 #statistics {
     display: flex;
     justify-content: space-around;
