@@ -1,14 +1,13 @@
+from sklearn.linear_model import LinearRegression
 import numpy as np
 
 class RealEstateModel:
-    def __init__(self, X, y):
-        self.X = np.c_[np.ones(X.shape[0]), X]  # Add bias term
-        self.y = y
-        self.theta = self.least_squares()
+    def __init__(self):
+        self.model = LinearRegression()
 
-    def least_squares(self):
-        return np.linalg.inv(self.X.T @ self.X) @ self.X.T @ self.y
+    def train(self, X, y):
+        self.model.fit(X, y)
 
-    def predict(self, X):
-        X_with_bias = np.c_[np.ones(X.shape[0]), X]
-        return X_with_bias @ self.theta
+    def predict(self, input_data):
+        prediction = self.model.predict(input_data)
+        return np.round(prediction[0], 2)
