@@ -1,66 +1,49 @@
-new Vue({
-    el: '#app',
-    data: {
-        map: null,
-        properties: [],
-        predictionInput: {
-            m2: 0,
-            p: 0,
-            buildDate: 2000
-        },
-        predictionResult: null
-    },
-    mounted() {
-        this.initMap();
-        this.fetchData();
-    },
-    methods: {
-        initMap() {
-            this.map = L.map('map').setView([37.5665, 126.9780], 11);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
-        },
-        fetchData() {
-            fetch('/data')
-                .then(response => response.json())
-                .then(data => {
-                    this.properties = data;
-                    this.plotProperties();
-                    this.createScatterPlot();
-                });
-        },
-        plotProperties() {
-            this.properties.forEach(property => {
-                L.marker([property.lat, property.lng]).addTo(this.map)
-                    .bindPopup(`面積: ${property.m2}m², 階数: ${property.p}, スコア: ${property.score}`);
-            });
-        },
-        predict() {
-            fetch('/predict', {
+document.addEventListener('DOMContentLoaded', () => {
+    const map = L.map('map').setView([37.5665, 126.9780], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', (e) => {
+        const { lat, lng } = e.latlng;
+        document.getElementById('lat').value = lat.toFixed(6);
+        document.getElementById('lng').value = lng.toFixed(6);
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker([lat, lng]).addTo(map);
+    });
+
+    const form = document.getElementById('prediction-form');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(this.predictionInput),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    this.predictionResult = data.predicted_score;
-                });
-        },
-        createScatterPlot() {
-            const trace = {
-                x: this.properties.map(p => p.m2),
-                y: this.properties.map(p => p.score),
-                mode: 'markers',
-                type: 'scatter',
-                marker: { size: 5 }
-            };
-            const layout = {
-                title: '面積とスコアの関係',
-                xaxis: { title: '面積 (m²)' },
-                yaxis: { title: 'スコア' }
-            };
-            Plotly.newPlot('scatter-plot', [trace], layout);
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'An unknown error occurred');
+            }
+
+            const result = await response.json();
+            resultDiv.textContent = `Predicted Price: ${result.predicted_price.toLocaleString()} KRW`;
+        } catch (error) {
+            console.error('Error:', error);
+            resultDiv.textContent = `Error: ${error.message}`;
         }
-    }
+    });
 });

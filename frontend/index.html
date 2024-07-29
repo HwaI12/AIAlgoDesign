@@ -1,43 +1,43 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ソウル不動産評価スコア予測システム</title>
+    <title>Seoul Real Estate Price Predictor</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <div id="app">
-        <h1>ソウル不動産評価スコア予測システム</h1>
+        <h1>Seoul Real Estate Price Predictor</h1>
         <div id="map"></div>
-        <div id="prediction-form">
-            <h2>評価スコア予測</h2>
-            <label>
-                面積 (m²):
-                <input type="number" v-model.number="predictionInput.m2">
-            </label>
-            <label>
-                階数:
-                <input type="number" v-model.number="predictionInput.p">
-            </label>
-            <label>
-                建築年 (YYYY):
-                <input type="number" v-model.number="predictionInput.buildDate">
-            </label>
-            <button @click="predict">予測</button>
-            <p v-if="predictionResult !== null">
-                予測評価スコア: {{ predictionResult.toFixed(2) }}
-            </p>
-        </div>
-        <div id="statistics">
-            <h2>統計情報</h2>
-            <div id="scatter-plot"></div>
-        </div>
+        <form id="prediction-form">
+            <label for="lat">Latitude:</label>
+            <input type="number" id="lat" name="lat" required step="any">
+            
+            <label for="lng">Longitude:</label>
+            <input type="number" id="lng" name="lng" required step="any">
+            
+            <label for="households">Number of Households:</label>
+            <input type="number" id="households" name="households" required>
+            
+            <label for="score">Score:</label>
+            <input type="number" id="score" name="score" required step="0.1" min="0" max="5">
+            
+            <label for="m2">Area (m²):</label>
+            <input type="number" id="m2" name="m2" required>
+            
+            <label for="p">Number of Floors:</label>
+            <input type="number" id="p" name="p" required>
+            
+            <label for="year">Year Built:</label>
+            <input type="number" id="year" name="year" required min="1900" max="2023">
+            
+            <button type="submit">Predict Price</button>
+        </form>
+        <div id="result"></div>
     </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
