@@ -5,35 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seoul Real Estate Price Predictor</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
-        <h1>Seoul Real Estate Price Predictor</h1>
+        <h1>ソウル不動産価格予測ツール</h1>
         <div id="map"></div>
         <form id="prediction-form">
-            <label for="lat">Latitude:</label>
-            <input type="number" id="lat" name="lat" required step="any">
-            
-            <label for="lng">Longitude:</label>
-            <input type="number" id="lng" name="lng" required step="any">
-            
-            <label for="households">Number of Households:</label>
-            <input type="number" id="households" name="households" required>
-            
-            <label for="score">Score:</label>
-            <input type="number" id="score" name="score" required step="0.1" min="0" max="5">
-            
-            <label for="m2">Area (m²):</label>
-            <input type="number" id="m2" name="m2" required>
-            
-            <label for="p">Number of Floors:</label>
-            <input type="number" id="p" name="p" required>
-            
-            <label for="year">Year Built:</label>
-            <input type="number" id="year" name="year" required min="1900" max="2023">
-            
-            <button type="submit">Predict Price</button>
+            <div class="form-group">
+                <input type="number" id="lat" name="lat" required step="any" placeholder="緯度">
+                <input type="number" id="lng" name="lng" required step="any" placeholder="経度">
+            </div>
+            <div class="form-group">
+                <input type="number" id="households" name="households" required placeholder="居住世帯数">
+                <input type="number" id="score" name="score" required step="0.1" min="0" max="5" placeholder="総合評価 (0-5)">
+            </div>
+            <div class="form-group">
+                <input type="number" id="m2" name="m2" required placeholder="家の面積 (m^2)">
+                <input type="number" id="p" name="p" required placeholder="階数">
+            </div>
+            <div class="form-group">
+                <input type="number" id="year" name="year" required min="1900" max="2023" placeholder="建築年">
+            </div>
+            <button type="submit">価格を予測</button>
         </form>
         <div id="result"></div>
     </div>

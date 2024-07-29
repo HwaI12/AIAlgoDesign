@@ -40,10 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const result = await response.json();
-            resultDiv.textContent = `Predicted Price: ${result.predicted_price.toLocaleString()} KRW`;
+            resultDiv.textContent = `予測価格は${result.predicted_price.toLocaleString()} KRWです。`;
+            resultDiv.style.display = 'block';
         } catch (error) {
             console.error('Error:', error);
-            resultDiv.textContent = `Error: ${error.message}`;
+            resultDiv.textContent = 'An error occurred while predicting the price.';
+            resultDiv.style.display = 'block';
         }
     });
+
+    // 初期状態で結果を非表示にする
+    resultDiv.style.display = 'none';
 });
