@@ -9,25 +9,21 @@ import traceback
 app = Flask(__name__, static_folder='../frontend')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-def print_evaluation_results(results):
-    print("\n===== モデル評価結果 =====")
-    print(f"MSE  (平均二乗誤差): {results['mse']:.2f}")
-    print(f"RMSE (平方根平均二乗誤差): {results['rmse']:.2f}")
-    print(f"MAE  (平均絶対誤差): {results['mae']:.2f}")
-    print(f"R²   (決定係数): {results['r2']:.4f}")
-    print(f"R²_train (訓練データでの決定係数): {results['r2_train']:.4f}")
-    print("==========================\n")
-
 try:
     # データの読み込みと前処理
     data_processor = DataProcessor('SeoulRealEstate.csv')
-    X, y = data_processor.prepare_data()
+    X, y, feature_names = data_processor.prepare_data()
 
-    # モデルのトレーニングと評価
+    # モデルのトレーニング
     model = RealEstateModel()
-    model.train(X, y)
+    model.train(X, y, feature_names)
+    
+    # モデルの評価
     evaluation_results = model.evaluate()
-    print_evaluation_results(evaluation_results)
+    print("\n===== モデル評価結果 =====")
+    for key, value in evaluation_results.items():
+        print(f"{key}: {value}")
+    print("==========================\n")
 
 except Exception as e:
     print(f"Error during initialization: {str(e)}")
@@ -41,7 +37,8 @@ def index():
 
 @app.route('/<path:path>')
 def serve_static(path):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+    file_path = os.path.join(app.static_folder, path)
+    if path != "" and os.path.exists(file_path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
@@ -59,7 +56,8 @@ def predict():
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         traceback.print_exc()
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': '予測処理中にエラーが発生しました。'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
