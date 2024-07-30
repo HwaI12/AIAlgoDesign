@@ -28,8 +28,9 @@
             <div class="form-group">
                 <input type="number" id="year" name="year" required min="1900" max="2023" placeholder="建築年">
             </div>
+            <input type="hidden" id="buildDate" name="buildDate">
             <button type="submit">価格を予測</button>
-        </form>
+        </form>        
         <div id="result"></div>
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

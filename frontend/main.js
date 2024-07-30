@@ -10,20 +10,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const { lat, lng } = e.latlng;
         document.getElementById('lat').value = lat.toFixed(6);
         document.getElementById('lng').value = lng.toFixed(6);
-
+        document.getElementById('buildDate').value = new Date().getFullYear() + '01'; // 例として現在年の1月を設定
+    
         if (marker) {
             map.removeLayer(marker);
         }
         marker = L.marker([lat, lng]).addTo(map);
     });
+    
 
     const form = document.getElementById('prediction-form');
     const resultDiv = document.getElementById('result');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+
+        // データが正しいか確認
+        console.log('Form data:', data);
 
         try {
             const response = await fetch('http://127.0.0.1:5000/predict', {
@@ -44,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
         } catch (error) {
             console.error('Error:', error);
-            resultDiv.textContent = 'An error occurred while predicting the price.';
+            resultDiv.textContent = '予測処理中にエラーが発生しました。';
             resultDiv.style.display = 'block';
         }
     });
