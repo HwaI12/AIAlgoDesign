@@ -9,14 +9,26 @@ import traceback
 app = Flask(__name__, static_folder='../frontend')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+def print_evaluation_results(results):
+    print("\n===== モデル評価結果 =====")
+    print(f"MSE  (平均二乗誤差): {results['mse']:.2f}")
+    print(f"RMSE (平方根平均二乗誤差): {results['rmse']:.2f}")
+    print(f"MAE  (平均絶対誤差): {results['mae']:.2f}")
+    print(f"R²   (決定係数): {results['r2']:.4f}")
+    print(f"R²_train (訓練データでの決定係数): {results['r2_train']:.4f}")
+    print("==========================\n")
+
 try:
     # データの読み込みと前処理
     data_processor = DataProcessor('SeoulRealEstate.csv')
     X, y = data_processor.prepare_data()
 
-    # モデルのトレーニング
+    # モデルのトレーニングと評価
     model = RealEstateModel()
     model.train(X, y)
+    evaluation_results = model.evaluate()
+    print_evaluation_results(evaluation_results)
+
 except Exception as e:
     print(f"Error during initialization: {str(e)}")
     traceback.print_exc()
